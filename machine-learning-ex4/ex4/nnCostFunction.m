@@ -62,22 +62,31 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% reshape yMat for algorithm
+yMat = zeros(m, num_labels);
 
+for i = 1:m
+    yMat(i,y(i)) = 1;
+end
 
+% add bias units, compute output
+a1 = [ones(m,1) X];
 
+g2 = sigmoid(a1 * Theta1');
 
+a2 = [ones(size(g2,1),1) g2];
 
+g3 = sigmoid(a2 * Theta2');
 
+output = g3;
 
+% compute cost
+J = sum(sum(-1 * yMat .* log(output)-(1.-yMat) .* log(1.-output))) * (1/m);
 
+% compute regularization term for cost function
+regularization = (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2))) * (lambda/(2*m));
 
-
-
-
-
-
-
-
+J = J + regularization;
 
 
 % -------------------------------------------------------------
