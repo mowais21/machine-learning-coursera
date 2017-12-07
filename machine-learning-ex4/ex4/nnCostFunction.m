@@ -91,6 +91,36 @@ J = J + regularization;
 
 % -------------------------------------------------------------
 
+for t=1:m
+  
+  %input layer with bias
+  a1 = [1; X(t,:)'];
+  
+  z2 = Theta1 * a1;
+  
+  a2 = [1; sigmoid(z2)];
+  
+  z3 = Theta2 * a2;
+  
+  a3 = sigmoid(z3);
+  
+  %checks if training example belongs to class k (label)
+  y_labs = ([1:num_labels]==y(t))'
+  
+  delta3 = a3 - y_labs;
+  
+  delta2 = (Theta2'*delta3) .* [1; sigmoidGradient(z2)];
+  
+  delta2 = delta2(2:end);
+  
+  Theta1_grad = Theta1_grad + delta2 * a1';
+  Theta2_grad = Theta2_grad + delta3 * a2';
+  
+end
+
+Theta1_grad = (1/m) * Theta1_grad + (lambda/m) * [zeros(size(Theta1, 1), 1) Theta1(:,2:end)];
+Theta2_grad = (1/m) * Theta2_grad + (lambda/m) * [zeros(size(Theta2, 1), 1) Theta2(:,2:end)];
+
 % =========================================================================
 
 % Unroll gradients
